@@ -60,12 +60,11 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Quyền hạn</label>
-                                    <select class="form-control" name="idAuth">
+                                    <select class="form-control select2_init" name="idAuth[]" multiple>
                                         @foreach($auth as $au)
-                                        <option value="{{$au->id}}" @if($au->id == $data->idAuth) selected @endif>
-                                            {{$au->name}}
-                                        </option>
+                                        <option {{ $roleUser->contains('id', $au->id) ? 'selected' : '' }} value="{{ $au->id }}">{{ $au->name }}</option>
                                         @endforeach
+
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -93,6 +92,7 @@
                             @endif
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
+                                <a href="{{route('users.list')}}" class="btn btn-warning" style="color:#fff; ">Back</a>
                             </div>
                         </form>
 

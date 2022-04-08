@@ -32,11 +32,19 @@
 
                             <!-- <h3 class="card-title">DataTable with minimal features & hover style</h3> -->
                             <a class="btn btn-info btn-lg" href="{{route('users.get_create')}}">Add User</a>
-
+                           
                             @if (session('notice'))
                             <div class="">
-                                <ul>
+                                <ul style="list-style-type: none;font-weight:600">
                                     <li class="text-danger"> {{ session('notice') }}</li>
+                                </ul>
+                            </div>
+
+                            @endif
+                            @if (session('success'))
+                            <div class="" style="background-color: #9aef9a;">
+                                <ul style="list-style-type: none;font-weight:600">
+                                    <li class="text-danger"> {{ session('success') }}</li>
                                 </ul>
                             </div>
 
@@ -74,40 +82,55 @@
                                         <th>Tên user</th>
                                         <th>Email</th>
                                         <th>Trạng thái</th>
-                                        <th>Quyền</th>
+                                        @foreach($auth as $au)
+                                        <th>{{$au->name}}</th>
+                                        @endforeach
                                         <th>Sửa/Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($data as $key => $item)
-                                    <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>{{$item->name}}</td>
-                                        <td>{{$item->email}}</td>
-                                        @if($item->active==1)
-                                        <td>Hiện</td>
-                                        @else
-                                        <td>Ẩn</td>
-                                        @endif
-                                        @if($item->idAuth == null)
+                                    <form action="{{route('users.assigned_role')}}" method="post">
+                                        {{csrf_field()}}
+
+                                        <tr>
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$item->name}}</td>
+                                            <td>{{$item->email}}
+                                                <input hidden name="email" value="{{$item->email}}">
+                                            </td>
+                                            @if($item->active==1)
+                                            <td>Hiện</td>
+                                            @else
+                                            <td>Ẩn</td>
+                                            @endif
+                                            @foreach($auth as $au)
+                                            <td><input type="checkbox" name="{{$au->name}}" onchange="this.form.submit()" {{$item->hasRole($au->name)?'checked':''}}></td>
+                                            @endforeach
+                                            <!-- <td><input type="checkbox" name="superadmin_role" onchange="this.form.submit()" {{$item->hasRole('SuperAdmin')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="admin_role" onchange="this.form.submit()" {{$item->hasRole('Admin')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="client_role" onchange="this.form.submit()" {{$item->hasRole('Client')?'checked':''}}></td> -->
+
+                                            <!-- @if($item->role_id == null)
                                         <td>Chưa cấp quyền</td>
                                         @else
                                         @foreach($auth as $au)
-                                        @if($au->id == $item->idAuth)
+                                        @if($au->id == $item->role_id)
                                         <td>{{$au->name}}</td>
                                         @endif
                                         @endforeach
-                                        @endif
+                                        @endif -->
 
-                                        <td>
-                                            <a href="/admin/users/edit/{{$item->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt">
-                                                </i>Sửa</a>
-                                            <a href="/admin/users/delete/{{$item->id}}" class="btn btn-danger btn-sm"><i class="fas fa-trash">
-                                                </i>Xóa</a>
-                                            <!-- <input class="btn-primary" type="submit" value="Sửa">
+                                            <td>
+                                                <a href="/admin/users/edit/{{$item->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt">
+                                                    </i>Sửa</a>
+                                                <a href="/admin/users/delete/{{$item->id}}" class="btn btn-danger btn-sm"><i class="fas fa-trash">
+                                                    </i>Xóa</a>
+                                                <!-- <input class="btn-primary" type="submit" value="Sửa">
                         <input class="btn-danger" type="submit" value="Xóa"> -->
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </form>
                                     @endforeach
                                 </tbody>
                                 <tfoot>
@@ -118,7 +141,13 @@
                                         <th>Engine version</th>
                                         <th>CSS grade</th>
                                     </tr>
+                                    <div class="col-sm-7 text-right text-center-xs">
+                                        <ul class="pagination pagination-sm m-t-none m-b-none">
+                                            {!!$data->links()!!}
+                                        </ul>
+                                    </div>
                                 </tfoot>
+
                             </table>
                         </div>
                     </div>

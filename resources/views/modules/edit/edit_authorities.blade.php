@@ -2,6 +2,10 @@
 
 @section('title','Sửa User')
 
+@section('child-css')
+<link rel="stylesheet" href="{{ asset('admin/role/add.css') }}">
+@endsection
+
 @section('main')
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -9,7 +13,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Sửa Users</h1>
+                    <h1>Sửa chức năng quyền quản trị</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -25,25 +29,26 @@
     <section class="content">
         <div class="container-fluid">
             <div class="row">
-                <!-- left column -->
-                <div class="col-md-12">
-                    <!-- jdata validation -->
-                    <div class="card card-primary">
-                        <div class="card-header">
-                            <h3 class="card-title">Sửa quyền quản trị</h3>
-                        </div>
-                        <!-- /.card-header -->
-                        <!-- form start -->
-                        @if (count($errors) > 0)
-                        <div class="error-message">
-                            <ul style="list-style-type: none; color:red; font-weight:600;">
-                                @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                        @endif
-                        <form id="quickForm" method="post" action="" method="post">
+                <form id="quickForm" method="post" action="" method="post">
+                    <!-- left column -->
+                    <div class="col-md-12">
+                        <!-- jdata validation -->
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Sửa quyền quản trị</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            @if (count($errors) > 0)
+                            <div class="error-message">
+                                <ul style="list-style-type: none; color:red; font-weight:600;">
+                                    @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            @endif
+
                             {{csrf_field()}}
                             <div class="card-body">
                                 <div class="form-group">
@@ -76,17 +81,55 @@
                             <div class="card-footer">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </div>
-                        </form>
+
+
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label>
+                                    <input type="checkbox" class="checkall">
+                                    checkall
+                                </label>
+                            </div>
+
+                            @foreach($permissionsParent as $permissionsParentItem)
+                            <div class="card border-primary mb-3 col-md-12">
+                                <div class="card-header">
+                                    <label>
+                                        <input type="checkbox" value="" class="checkbox_wrapper">
+                                    </label>
+                                    Module {{ $permissionsParentItem->name }}
+                                </div>
+                                <div class="row">
+                                    @foreach($permissionsParentItem->permissionsChildrent as $permissionsChildrentItem)
+                                    <div class="card-body text-primary col-md-3">
+                                        <h5 class="card-title">
+                                            <label>
+                                                <input type="checkbox" name="permission_id[]" {{ $pemissionsChecked->contains('id', $permissionsChildrentItem->id) ? 'checked' : '' }} class="checkbox_childrent" value="{{ $permissionsChildrentItem->id }}">
+                                            </label>
+                                            {{ $permissionsChildrentItem->name }}
+                                        </h5>
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endforeach
+
+
+                        </div>
+
 
                     </div>
-                    <!-- /.card -->
-                </div>
-                <!--/.col (left) -->
-                <!-- right column -->
-                <div class="col-md-6">
+                    </form>
+                    <!--/.col (left) -->
+                    <!-- right column -->
+                    <div class="col-md-6">
 
-                </div>
-                <!--/.col (right) -->
+                    </div>
+                    <!--/.col (right) -->
             </div>
             <!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -134,3 +177,6 @@
     });
 </script>
 @stop
+@section('child-js')
+<script src="{{ asset('admin/role/add.js') }}"></script>
+@endsection

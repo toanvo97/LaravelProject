@@ -40,27 +40,52 @@
                                         <th>STT</th>
                                         <th>Quyền</th>
                                         <th>Trạng thái</th>
+                                        <th>Quản lý</th>
+                                        <!-- <th>Thêm</th>
+                                        <th>Sửa</th>
+                                        <th>Xóa</th>
+                                        <th>Khác</th> -->
                                         <th>Sửa/Xóa</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach($auth as $key => $item)
-                                    <tr>
-                                        <td>{{$key+1}}</td>
-                                        <td>{{$item->name}}</td>
+                                    <form action="{{route('authorities.assigned_permission')}}" method="post">
+                                        {{csrf_field()}}
+                                        <tr>
+                                            <td>{{$key+1}}</td>
+                                            <td>{{$item->name}}
+                                                <input hidden name="name" value="{{$item->name}}">
+                                            </td>
 
-                                        @if($item->active==true)
-                                        <td>Hiện</td>
-                                        @else
-                                        <td>Ẩn</td>
-                                        @endif
-                                        <td>
-                                            <a href="/admin/authorities/edit/{{$item->id}}" class="btn-primary">Sửa</a>
-                                            <a href="/admin/authorities/delete/{{$item->id}}" class="btn-danger">Xóa</a>
-                                            <!-- <input class="btn-primary" type="submit" value="Sửa">
+                                            @if($item->active==true)
+                                            <td>Hiện</td>
+                                            @else
+                                            <td>Ẩn</td>
+                                            @endif
+
+                                            <td>
+                                                @foreach($parent as $parentPermission)
+                                                {{$parentPermission->name}}
+                                                <input type="checkbox" name="{{$parentPermission->name}}" onchange="this.form.submit()" {{$item->hasPermission($parentPermission->name)?'checked':''}}>
+                                                 @endforeach
+                                            </td>
+
+                                            <!-- <td><input type="checkbox" name="read_permission" onchange="this.form.submit()" {{$item->hasPermission('read')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="create_permission" onchange="this.form.submit()" {{$item->hasPermission('create')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="update_permission" onchange="this.form.submit()" {{$item->hasPermission('update')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="delete_permission" onchange="this.form.submit()" {{$item->hasPermission('delete')?'checked':''}}></td>
+                                            <td><input type="checkbox" name="full_permission" onchange="this.form.submit()" {{$item->hasPermission('full')?'checked':''}}></td> -->
+                                            <td>
+                                                <a href="/admin/authorities/edit/{{$item->id}}" class="btn btn-info btn-sm"><i class="fas fa-pencil-alt">
+                                                    </i>Sửa</a>
+                                                <a href="/admin/authorities/delete/{{$item->id}}" class="btn btn-sm btn-danger"><i class="fas fa-trash">
+                                                    </i>Xóa</a>
+                                                <!-- <input class="btn-primary" type="submit" value="Sửa">
                         <input class="btn-danger" type="submit" value="Xóa"> -->
-                                        </td>
-                                    </tr>
+                                            </td>
+                                        </tr>
+                                    </form>
                                     @endforeach
                                 </tbody>
                                 <tfoot>

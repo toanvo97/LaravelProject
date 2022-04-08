@@ -60,7 +60,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Quyền hạn</label>
-                                    <select class="form-control" name="idAuth">
+                                    <select class="form-control select2_init" name="idAuth[]" multiple>
+                                        <option value=""></option>
                                         @foreach($auth as $item)
                                         <option value="{{$item->id}}">{{$item->name}}</option>
                                         @endforeach
